@@ -1,0 +1,28 @@
+{
+  "extends": "@tsconfig/node24/tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "resolveJsonModule": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "allowJs": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "noImplicitReturns": true,
+    "sourceMap": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "isolatedModules": true,
+    "checkJs": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "rootDir": "./src",
+    "paths": {
+      "#src/*": ["./src/*"]
+    }
+  },
+  "include": ["./src/**/*", "./src/api/.well-known/**/*.ts"]
+}
