@@ -1,0 +1,20 @@
+{
+  "db": {
+    "connectionString": "{{PG_CONNECTION_STRING}}"
+  },
+  "outDir": "./src",
+  "progressListener": true,
+  "customJSONParsingForLargeNumbers": true,
+  "schemas": {
+    "public": {
+      "include": "*",
+      "exclude": [
+        "geography_columns",
+        "geometry_columns",
+        "raster_columns",
+        "raster_overviews",
+        "spatial_ref_sys"
+      ]
+    }
+  }
+}
