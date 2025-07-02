@@ -105,100 +105,112 @@ create table if not exists meta_field_definition
     key         citext                                      not null,
     owner_type  meta_field_owner_type                       not null,
     data_type   meta_field_data_type                        not null,
-    constraint unique_meta_field_definition_identifier unique (namespace, key)
+    created_at  timestamptz                                 not null default now(),
+    updated_at  timestamptz                                 not null default now(),
+    constraint unique_meta_field_definition_identifier unique (namespace, key),
+    constraint meta_field_definition_namespace_valid check (namespace ~ '^[A-Za-z0-9_-]{1,255}$'),
+    constraint meta_field_definition_key_valid check (namespace ~ '^[A-Za-z0-9_-]{1,64}$')
+);
+
+create table if not exists custom_field
+(
+    id         text primary key,
+    created_at timestamptz not null default now(),
+    updated_at timestamptz not null default now()
 );
 
 create table if not exists meta_field
 (
-    id            text primary key,
-    definition_id text        not null references meta_field_definition (id),
-    created_at    timestamptz not null default now(),
-    updated_at    timestamptz not null default now()
+    id              text primary key,
+    definition_id   text        not null references meta_field_definition (id),
+    custom_field_id text        not null references custom_field (id),
+    created_at      timestamptz not null default now(),
+    updated_at      timestamptz not null default now()
 );
 
-create table if not exists meta_field_boolean
+create table if not exists custom_field_boolean
 (
-    meta_field_id text        not null references meta_field (id),
-    value         boolean     not null,
-    created_at    timestamptz not null default now(),
-    updated_at    timestamptz not null default now(),
-    primary key (meta_field_id)
+    custom_field_id text        not null references custom_field (id),
+    value           boolean     not null,
+    created_at      timestamptz not null default now(),
+    updated_at      timestamptz not null default now(),
+    primary key (custom_field_id)
 );
 
-create table if not exists meta_field_single_line_text
+create table if not exists custom_field_single_line_text
 (
-    meta_field_id text        not null references meta_field (id),
-    value         citext      not null default '',
-    created_at    timestamptz not null default now(),
-    updated_at    timestamptz not null default now(),
-    primary key (meta_field_id)
+    custom_field_id text        not null references custom_field (id),
+    value           citext      not null default '',
+    created_at      timestamptz not null default now(),
+    updated_at      timestamptz not null default now(),
+    primary key (custom_field_id)
 );
 
-create table if not exists meta_field_multi_line_text
+create table if not exists custom_field_multi_line_text
 (
-    meta_field_id text        not null references meta_field (id),
-    value         citext      not null default '',
-    created_at    timestamptz not null default now(),
-    updated_at    timestamptz not null default now(),
-    primary key (meta_field_id)
+    custom_field_id text        not null references custom_field (id),
+    value           citext      not null default '',
+    created_at      timestamptz not null default now(),
+    updated_at      timestamptz not null default now(),
+    primary key (custom_field_id)
 );
 
-create table if not exists meta_field_date
+create table if not exists custom_field_date
 (
-    meta_field_id text        not null references meta_field (id),
-    value         date        not null,
-    created_at    timestamptz not null default now(),
-    updated_at    timestamptz not null default now(),
-    primary key (meta_field_id)
+    custom_field_id text        not null references custom_field (id),
+    value           date        not null,
+    created_at      timestamptz not null default now(),
+    updated_at      timestamptz not null default now(),
+    primary key (custom_field_id)
 );
 
-create table if not exists meta_field_date_time
+create table if not exists custom_field_date_time
 (
-    meta_field_id text         not null references meta_field (id),
-    value         timestamp(0) not null,
-    created_at    timestamptz  not null default now(),
-    updated_at    timestamptz  not null default now(),
-    primary key (meta_field_id)
+    custom_field_id text         not null references custom_field (id),
+    value           timestamp(0) not null,
+    created_at      timestamptz  not null default now(),
+    updated_at      timestamptz  not null default now(),
+    primary key (custom_field_id)
 );
 
-create table if not exists meta_field_money
+create table if not exists custom_field_money
 (
-    meta_field_id text        not null references meta_field (id),
-    amount        decimaltext not null,
-    currency_code citext      not null,
-    created_at    timestamptz not null default now(),
-    updated_at    timestamptz not null default now(),
-    primary key (meta_field_id)
+    custom_field_id text        not null references custom_field (id),
+    amount          decimaltext not null,
+    currency_code   citext      not null,
+    created_at      timestamptz not null default now(),
+    updated_at      timestamptz not null default now(),
+    primary key (custom_field_id)
 );
 
-create table if not exists meta_field_dimension
+create table if not exists custom_field_dimension
 (
-    meta_field_id text        not null references meta_field (id),
-    unit_id       text        not null references dimension_units (id),
-    value         decimaltext not null,
-    created_at    timestamptz not null default now(),
-    updated_at    timestamptz not null default now(),
-    primary key (meta_field_id)
+    custom_field_id text        not null references custom_field (id),
+    unit_id         text        not null references dimension_units (id),
+    value           decimaltext not null,
+    created_at      timestamptz not null default now(),
+    updated_at      timestamptz not null default now(),
+    primary key (custom_field_id)
 );
 
-create table if not exists meta_field_volume
+create table if not exists custom_field_volume
 (
-    meta_field_id text        not null references meta_field (id),
-    unit_id       text        not null references volume_units (id),
-    value         decimaltext not null,
-    created_at    timestamptz not null default now(),
-    updated_at    timestamptz not null default now(),
-    primary key (meta_field_id)
+    custom_field_id text        not null references custom_field (id),
+    unit_id         text        not null references volume_units (id),
+    value           decimaltext not null,
+    created_at      timestamptz not null default now(),
+    updated_at      timestamptz not null default now(),
+    primary key (custom_field_id)
 );
 
-create table if not exists meta_field_weight
+create table if not exists custom_field_weight
 (
-    meta_field_id text        not null references meta_field (id),
-    unit_id       text        not null references weight_units (id),
-    value         decimaltext not null,
-    created_at    timestamptz not null default now(),
-    updated_at    timestamptz not null default now(),
-    primary key (meta_field_id)
+    custom_field_id text        not null references custom_field (id),
+    unit_id         text        not null references weight_units (id),
+    value           decimaltext not null,
+    created_at      timestamptz not null default now(),
+    updated_at      timestamptz not null default now(),
+    primary key (custom_field_id)
 );
 
 -- migrate:down
